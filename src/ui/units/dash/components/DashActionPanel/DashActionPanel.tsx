@@ -11,6 +11,8 @@ import {Feature} from 'shared';
 import {ActionPanelEntryContextMenuQa} from 'shared/constants/qa/action-panel';
 import type {DatalensGlobalState, EntryDialogues} from 'ui';
 import {ActionPanel, DL, EntryDialogName, EntryDialogResolveStatus} from 'ui';
+import type {FilterEntryContextMenuItems} from 'ui/components/EntryContextMenu';
+import {ENTRY_CONTEXT_MENU_ACTION} from 'ui/components/EntryContextMenu';
 import {registry} from 'ui/registry';
 import {closeDialog as closeDialogConfirm, openDialogConfirm} from 'ui/store/actions/dialog';
 import {goBack, goForward} from 'ui/store/actions/editHistory';
@@ -132,6 +134,7 @@ class DashActionPanel extends React.PureComponent<ActionPanelProps, ActionPanelS
                             setActualVersion={this.handlerSetActualVersion}
                             isEditing={isEditMode}
                             deprecationWarning={deprecationWarning}
+                            filterEntryContextMenuItems={this.filterEntryContextMenuItems}
                         />
                         {Boolean(DashSelectState) && <DashSelectState />}
                     </React.Fragment>
@@ -139,6 +142,22 @@ class DashActionPanel extends React.PureComponent<ActionPanelProps, ActionPanelS
             </div>
         );
     }
+
+    private filterEntryContextMenuItems: FilterEntryContextMenuItems = ({entry, items}) => {
+        const withoutCopyItems = items.filter(
+            (item) =>
+                item.id !== ENTRY_CONTEXT_MENU_ACTION.COPY_LINK &&
+                item.id !== ENTRY_CONTEXT_MENU_ACTION.COPY_ID,
+        );
+
+        if (!entry?.permissions?.admin) {
+            return withoutCopyItems.filter(
+                (item) => item.id !== ENTRY_CONTEXT_MENU_ACTION.SHOW_RELATED_ENTITIES,
+            );
+        }
+
+        return withoutCopyItems;
+    };
 
     renderControls() {
         const {entry} = this.props;
