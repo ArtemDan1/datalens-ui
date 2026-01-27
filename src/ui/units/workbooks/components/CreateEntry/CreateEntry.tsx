@@ -18,6 +18,7 @@ import {getSharedEntryMockText} from 'ui/units/collections/components/helpers';
 import Utils from 'ui/utils';
 import {isEnabledFeature} from 'ui/utils/isEnabledFeature';
 
+import {UserRole} from 'shared/components/auth/constants/role';
 import type {CreateEntryActionType} from '../../constants';
 import {
     bindSharedEntryToWorkbook,
@@ -42,6 +43,15 @@ export const CreateEntry = React.memo<Props>(
     ({className, workbook, scope, size = 'm', view = 'normal'}) => {
         const dispatch = useDispatch<AppDispatch>();
         const filters = useSelector(selectWorkbookFilters);
+        const isAdmin = React.useMemo(() => {
+            const dl = window?.DL as
+                | {isAuthEnabled?: boolean; user?: {roles?: string[]}}
+                | undefined;
+            if (!dl?.isAuthEnabled) {
+                return true;
+            }
+            return Boolean(dl.user?.roles?.includes(UserRole.Admin));
+        }, []);
         const handleAction = (type: CreateEntryActionType) => {
             dispatch(setCreateWorkbookEntryType(type));
         };
@@ -147,7 +157,7 @@ export const CreateEntry = React.memo<Props>(
             handleAction,
         });
 
-        if (isEnabledFeature(Feature.EnableSharedEntries) && workbook?.workbookId) {
+        if (isAdmin && isEnabledFeature(Feature.EnableSharedEntries) && workbook?.workbookId) {
             items.push(
                 getSharedEntriesMenuItems({
                     datasetAction: handleSharedEntryAction({

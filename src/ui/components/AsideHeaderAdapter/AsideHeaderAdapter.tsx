@@ -10,6 +10,7 @@ import {I18n, i18n as baseI18n} from 'i18n';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useLocation} from 'react-router-dom';
 import {DlNavigationQA, Feature} from 'shared';
+import {UserRole} from 'shared/components/auth/constants/role';
 import {DL} from 'ui/constants';
 import {closeDialog, openDialog} from 'ui/store/actions/dialog';
 import {
@@ -146,6 +147,7 @@ export const AsideHeaderAdapter = ({
     }, []);
 
     const isReadOnly = isEnabledFeature(Feature.ReadOnlyMode);
+    const isAdmin = !DL.AUTH_ENABLED || (DL.USER?.roles || []).includes(UserRole.Admin);
     const topAlert: TopAlertProps | undefined = isReadOnly
         ? {
               message: baseI18n('common.read-only', 'toast_editing-warning'),
@@ -156,7 +158,9 @@ export const AsideHeaderAdapter = ({
         () => [
             {
                 id: 'collections',
-                title: i18n('label_collections'),
+                title: isAdmin
+                    ? i18n('label_collections')
+                    : i18n('label_collections-dashboards'),
                 icon: iconCollection,
                 iconSize: 16,
                 current: pathname.includes(COLLECTIONS_PATH),
@@ -176,7 +180,7 @@ export const AsideHeaderAdapter = ({
                 },
             },
         ],
-        [pathname, customMenuItems],
+        [pathname, customMenuItems, isAdmin],
     );
 
     const panelItems = React.useMemo(

@@ -86,6 +86,21 @@ export interface GetEntryMetaArgs {
     bindedDatasetId?: string | null;
 }
 
+export interface GetEntryAccessArgs {
+    entryId: string;
+}
+
+export interface GetEntryAccessResponse {
+    userIds: string[];
+}
+
+export interface UpdateEntryAccessArgs {
+    entryId: string;
+    userIds: string[];
+}
+
+export interface UpdateEntryAccessResponse extends GetEntryAccessResponse {}
+
 export interface GetRevisionsEntry extends EntryNavigationFields {
     revId: string;
 }

@@ -3,6 +3,7 @@
   "label_account": "Учётная запись",
   "label_app-version": "Версия",
   "label_collections": "Коллекции и воркбуки",
+  "label_collections-dashboards": "Дашборды",
   "label_docs": "Документация",
   "label_gallery": "DataLens Gallery",
   "label_github": "GitHub",
@@ -11,5 +12,6 @@
   "label_profile-settings": "Настройки профиля",
   "label_settings": "Настройки",
   "switch_collections": "Коллекции и воркбуки",
+  "switch_collections-dashboards": "Дашборды",
   "switch_service-settings": "Настройки сервиса"
 }

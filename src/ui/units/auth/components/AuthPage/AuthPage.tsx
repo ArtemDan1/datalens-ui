@@ -12,7 +12,6 @@ import {resetAuthState} from '../../store/actions/common';
 import {selectAuthPageInited} from '../../store/selectors/common';
 import {Logout} from '../Logout/Logout';
 import {Reload} from '../Reload/Reload';
-import {Signup} from '../Signup/Signup';
 
 import {useAuthPageInit} from './useAuthPageInit';
 
@@ -52,7 +51,7 @@ export function AuthPage({backgroundImage}: AuthPageProps) {
     const currentDefaultImage = theme === 'dark' ? defaultBackgroundDark : defaultBackgroundLight;
     const currentImage = backgroundImage?.[theme] || currentDefaultImage;
 
-    const showBackgroundImage = [AUTH_ROUTE.SIGNIN, AUTH_ROUTE.SIGNUP].includes(pathname);
+    const showBackgroundImage = [AUTH_ROUTE.SIGNIN].includes(pathname);
 
     return (
         <Flex direction="column" height="100%" className={b({theme})}>
@@ -68,7 +67,6 @@ export function AuthPage({backgroundImage}: AuthPageProps) {
             )}
             <Switch>
                 {needToSign && <Route path={AUTH_ROUTE.SIGNIN} component={Signin} />}
-                {needToSign && <Route path={AUTH_ROUTE.SIGNUP} component={Signup} />}
                 <Route path={AUTH_ROUTE.RELOAD} component={Reload} />
                 <Route path={AUTH_ROUTE.LOGOUT} component={Logout} />
                 <Redirect to="/" />

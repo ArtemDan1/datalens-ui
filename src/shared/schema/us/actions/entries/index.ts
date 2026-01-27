@@ -31,6 +31,8 @@ import type {
     GetEntriesByKeyPatternResponse,
     GetEntryByKeyArgs,
     GetEntryByKeyResponse,
+    GetEntryAccessArgs,
+    GetEntryAccessResponse,
     GetEntryMetaArgs,
     GetEntryMetaResponse,
     GetRelationsArgs,
@@ -56,6 +58,8 @@ import type {
     RenameEntryResponse,
     SwitchPublicationStatusArgs,
     SwitchPublicationStatusResponse,
+    UpdateEntryAccessArgs,
+    UpdateEntryAccessResponse,
 } from '../../types';
 
 import {_createEntry} from './create-entry';
@@ -91,6 +95,19 @@ export const entriesActions = {
                 ...(bindedWorkbookId ? {[WORKBOOK_ID_HEADER]: bindedWorkbookId} : {}),
                 ...(bindedDatasetId ? {[DATASET_ID_HEADER]: bindedDatasetId} : {}),
             },
+        }),
+    }),
+    getEntryAccess: createAction<GetEntryAccessResponse, GetEntryAccessArgs>({
+        method: 'GET',
+        path: ({entryId}) => `${PATH_PREFIX}/entries/${filterUrlFragment(entryId)}/access`,
+        params: (_args, headers) => ({headers}),
+    }),
+    updateEntryAccess: createAction<UpdateEntryAccessResponse, UpdateEntryAccessArgs>({
+        method: 'PUT',
+        path: ({entryId}) => `${PATH_PREFIX}/entries/${filterUrlFragment(entryId)}/access`,
+        params: ({userIds}, headers) => ({
+            body: {userIds},
+            headers,
         }),
     }),
     getRevisions: createAction<GetRevisionsOutput, GetRevisionsArgs, GetRevisionsResponse>({

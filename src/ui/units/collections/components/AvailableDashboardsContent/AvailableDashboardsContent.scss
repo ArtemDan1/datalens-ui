@@ -1,0 +1,20 @@
+.dl-available-dashboards {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+
+    &__search {
+        max-width: 480px;
+    }
+
+    &__list {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    &__load-more {
+        display: flex;
+        justify-content: center;
+    }
+}

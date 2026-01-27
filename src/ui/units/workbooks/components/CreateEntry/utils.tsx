@@ -6,6 +6,7 @@ import {I18n} from 'i18n';
 import {EntryScope} from 'shared';
 import {EntityIcon} from 'ui/components/EntityIcon/EntityIcon';
 
+import {UserRole} from 'shared/components/auth/constants/role';
 import {CreateEntryActionType} from '../../constants';
 
 const i18n = I18n.keyset('new-workbooks');
@@ -18,6 +19,18 @@ export const useCreateEntryOptions = ({
     scope?: EntryScope;
     handleAction: (action: CreateEntryActionType) => void;
 }) => {
+    const dl = window?.DL as {isAuthEnabled?: boolean; user?: {roles?: string[]}} | undefined;
+    const isAdmin = !dl?.isAuthEnabled || Boolean(dl.user?.roles?.includes(UserRole.Admin));
+
+    if (!isAdmin) {
+        return {
+            buttonText: i18n('action_create-dashboard'),
+            handleClick: () => handleAction(CreateEntryActionType.Dashboard),
+            items: [],
+            hasMenu: false,
+        };
+    }
+
     let buttonText;
     let handleClick: undefined | (() => void);
     let items: DropdownMenuItemMixed<unknown>[] = [];

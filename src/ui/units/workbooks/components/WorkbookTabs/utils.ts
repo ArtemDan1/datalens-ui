@@ -11,6 +11,7 @@ const i18n = I18n.keyset('new-workbooks.table-filters');
 export const getWorkbookTabs = (workbook: WorkbookWithPermissions): Item[] => {
     const iamResources = DL.IAM_RESOURCES;
     const isLimitedViewerMode = Boolean(iamResources?.workbook.roles.limitedViewer);
+    const isAdmin = !DL.AUTH_ENABLED || DL.IS_NATIVE_AUTH_ADMIN;
 
     const showDataTabs =
         (!isLimitedViewerMode || (isLimitedViewerMode && workbook.permissions.view)) &&
@@ -28,13 +29,16 @@ export const getWorkbookTabs = (workbook: WorkbookWithPermissions): Item[] => {
             id: EntryScope.Dash,
             title: i18n('switch_filter-by-scope-dash'),
         },
-        {
-            id: EntryScope.Widget,
-            title: i18n('switch_filter-by-scope-widget'),
-        },
     );
 
-    if (showDataTabs) {
+    if (isAdmin) {
+        result.push({
+            id: EntryScope.Widget,
+            title: i18n('switch_filter-by-scope-widget'),
+        });
+    }
+
+    if (isAdmin && showDataTabs) {
         result.push(
             {
                 id: EntryScope.Dataset,

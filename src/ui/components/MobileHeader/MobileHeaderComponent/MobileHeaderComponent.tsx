@@ -8,6 +8,7 @@ import {I18n} from 'i18n';
 import {LogoText} from 'ui/components/AsideHeaderAdapter/LogoText/LogoText';
 import type {MobileHeaderComponentProps} from 'ui/registry/units/common/types/components/MobileHeaderComponent';
 import {useScrollableContainerContext} from 'ui/utils/scrollableContainerContext';
+import {UserRole} from 'shared/components/auth/constants/role';
 
 import {DL} from '../../../constants/common';
 import {UserAvatar} from '../../UserMenu/UserAvatar';
@@ -25,16 +26,6 @@ const i18n = I18n.keyset('component.aside-header.view');
 
 const b = block('mobile-header');
 
-const menuItems = [
-    {
-        id: 'collections',
-        title: i18n('switch_collections'),
-        icon: iconCollection,
-        link: '/collections',
-        closeMenuOnClick: true,
-    },
-];
-
 enum Panel {
     User = 'user',
 }
@@ -45,6 +36,23 @@ export const MobileHeaderComponent = ({
     logoIcon,
     logoTextProps,
 }: MobileHeaderComponentProps) => {
+    const isAdmin = !DL.AUTH_ENABLED || (DL.USER?.roles || []).includes(UserRole.Admin);
+
+    const menuItems = React.useMemo(
+        () => [
+            {
+                id: 'collections',
+                title: isAdmin
+                    ? i18n('switch_collections')
+                    : i18n('switch_collections-dashboards'),
+                icon: iconCollection,
+                link: '/collections',
+                closeMenuOnClick: true,
+            },
+        ],
+        [isAdmin],
+    );
+
     const ref = React.useRef<HTMLDivElement>();
 
     const sideItem = (

@@ -3,6 +3,7 @@
   "label_account": "Account",
   "label_app-version": "Version",
   "label_collections": "Collections and workbooks",
+  "label_collections-dashboards": "Dashboards",
   "label_docs": "Documentation",
   "label_gallery": "DataLens Gallery",
   "label_github": "GitHub",
@@ -11,5 +12,6 @@
   "label_profile-settings": "Profile settings",
   "label_settings": "Settings",
   "switch_collections": "Collections and workbooks",
+  "switch_collections-dashboards": "Dashboards",
   "switch_service-settings": "Service settings"
 }

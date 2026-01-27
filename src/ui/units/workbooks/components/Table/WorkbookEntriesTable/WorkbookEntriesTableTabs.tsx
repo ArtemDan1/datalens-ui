@@ -65,6 +65,8 @@ export const WorkbookEntriesTableTabs = ({
         return null;
     }
 
+    const isAdmin = !DL.AUTH_ENABLED || DL.IS_NATIVE_AUTH_ADMIN;
+
     const [dashChunk = [], widgetChunk = [], datasetChunk = [], connChunk = []] = chunks ?? [];
 
     const isWidgetEmpty = widgetChunk.length === 0;
@@ -78,6 +80,32 @@ export const WorkbookEntriesTableTabs = ({
     if (DL.IS_MOBILE && isWidgetEmpty && isDashEmpty) {
         return (
             <PlaceholderIllustration name="template" title={i18n('label_empty-mobile-workbook')} />
+        );
+    }
+
+    if (!isAdmin) {
+        return (
+            <React.Fragment>
+                <MainTabContent
+                    chunk={dashChunk}
+                    actionCreateText={i18n('action_create-dashboard')}
+                    title={i18n('title_dashboards')}
+                    actionType={CreateEntryActionType.Dashboard}
+                    isShowMoreBtn={Boolean(!isDashEmpty && mapTokens?.[EntryScope.Dash])}
+                    loadMoreEntries={() => loadMoreEntries?.(EntryScope.Dash)}
+                    retryLoadEntries={() => retryLoadEntries?.(EntryScope.Dash)}
+                    isErrorMessage={mapErrors?.[EntryScope.Dash]}
+                    isLoading={mapLoaders?.[EntryScope.Dash]}
+                    workbook={workbook}
+                    onRenameEntry={onRenameEntry}
+                    onDeleteEntry={onDeleteEntry}
+                    onDuplicateEntry={onDuplicateEntry}
+                    onCopyEntry={onCopyEntry}
+                    clearView={clearViewDash}
+                    onShowRelatedClick={onShowRelated}
+                    onCopyId={onCopyId}
+                />
+            </React.Fragment>
         );
     }
 

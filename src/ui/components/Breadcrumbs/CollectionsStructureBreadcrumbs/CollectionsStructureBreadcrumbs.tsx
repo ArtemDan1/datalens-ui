@@ -4,7 +4,9 @@ import {Breadcrumbs} from '@gravity-ui/uikit';
 import block from 'bem-cn-lite';
 import {I18n} from 'i18n';
 
+import {UserRole} from '../../../../shared/components/auth/constants/role';
 import type {GetCollectionBreadcrumbsResponse} from '../../../../shared/schema';
+import {DL} from '../../../constants/common';
 
 import './CollectionsStructureBreadcrumbs.scss';
 
@@ -23,9 +25,12 @@ type BreadcrumbsItemData = {
 };
 
 export const CollectionsStructureBreadcrumbs: React.FC<Props> = ({items, onChange}) => {
+    const isAdmin = (DL.USER?.roles || []).includes(UserRole.Admin);
     const preparedItems: BreadcrumbsItemData[] = [
         {
-            text: i18n('label_root-title'),
+            text: isAdmin
+                ? i18n('label_root-title')
+                : i18n('label_root-title-dashboards'),
             action: () => {
                 onChange(null);
             },

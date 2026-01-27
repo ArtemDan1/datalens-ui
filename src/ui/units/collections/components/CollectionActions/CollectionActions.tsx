@@ -12,7 +12,9 @@ import block from 'bem-cn-lite';
 import {I18n} from 'i18n';
 import {useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import {UserRole} from 'shared/components/auth/constants/role';
 import {DropdownAction} from 'ui/components/DropdownAction/DropdownAction';
+import {DL} from 'ui/constants/common';
 import {isEnabledFeature} from 'ui/utils/isEnabledFeature';
 
 import {Feature} from '../../../../../shared';
@@ -52,13 +54,22 @@ export const CollectionActions = React.memo<Props>(
         const collection = useSelector(selectCollection);
         const history = useHistory();
         const {CustomActionPanelCollectionActions} = registry.collections.components.getAll();
+        const isAdmin = (DL.USER?.roles || []).includes(UserRole.Admin);
 
-        const showCreateCollection = collection ? collection.permissions?.createCollection : true;
+        const showCreateCollection = isAdmin
+            ? collection
+                ? collection.permissions?.createCollection
+                : true
+            : false;
 
-        const showCreateWorkbook = collection ? collection.permissions?.createWorkbook : true;
+        const showCreateWorkbook = isAdmin
+            ? collection
+                ? collection.permissions?.createWorkbook
+                : true
+            : false;
 
         const showCreateSharedEntry =
-            isEnabledFeature(Feature.EnableSharedEntries) && collection
+            isAdmin && isEnabledFeature(Feature.EnableSharedEntries) && collection
                 ? collection.permissions?.createSharedEntry
                 : false;
 

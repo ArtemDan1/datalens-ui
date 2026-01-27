@@ -5,10 +5,12 @@ import block from 'bem-cn-lite';
 import {I18n} from 'i18n';
 import {useHistory} from 'react-router';
 
+import {UserRole} from '../../../../../shared/components/auth/constants/role';
 import type {
     GetCollectionBreadcrumbsResponse,
     GetWorkbookResponse,
 } from '../../../../../shared/schema';
+import {DL} from '../../../../constants/common';
 import {COLLECTIONS_PATH, WORKBOOKS_PATH} from '../../constants';
 
 import './CollectionBreadcrumbs.scss';
@@ -37,12 +39,15 @@ type Props = {
 export const CollectionBreadcrumbs = React.memo<Props>(
     ({className, isLoading = false, collections, workbook, onItemClick}) => {
         const history = useHistory();
+        const isAdmin = (DL.USER?.roles || []).includes(UserRole.Admin);
 
         const items = React.useMemo<BreadcrumbsItem[]>(() => {
             const result: BreadcrumbsItem[] = [
                 {
                     id: null,
-                    text: i18n('label_root-title'),
+                    text: isAdmin
+                        ? i18n('label_root-title')
+                        : i18n('label_root-title-dashboards'),
                     action: () => {
                         history.push(COLLECTIONS_PATH);
                     },
@@ -84,7 +89,7 @@ export const CollectionBreadcrumbs = React.memo<Props>(
             }
 
             return result;
-        }, [isLoading, history, collections, workbook]);
+        }, [isLoading, history, collections, workbook, isAdmin]);
 
         return (
             <div className={b(null, className)}>

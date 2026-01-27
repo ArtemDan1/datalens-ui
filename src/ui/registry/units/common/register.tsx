@@ -1,4 +1,4 @@
-import {extractEntryId, isEntryId} from 'shared';
+import {EntryScope, extractEntryId, isEntryId} from 'shared';
 import {getEntryScopesWithRevisionsList} from 'ui/components/RevisionsPanel/utils';
 import {DL} from 'ui/constants';
 import {getAdditionalChartkitErrorContent} from 'ui/libs/DatalensChartkit/Error/getAdditionalChartkitErrorContent';
@@ -51,6 +51,10 @@ import {exampleFunction} from '../../functions/example-function';
 import {registry} from '../../index';
 
 import {EXAMPLE_FUNCTION} from './constants/functions';
+import type {ContextMenuItem} from 'ui/components/EntryContextMenu/types';
+import {LockOpen} from '@gravity-ui/icons';
+
+const ACCESS_MENU_ACTION = 'access';
 
 export const registerCommonPlugins = () => {
     registry.common.components.registerMany({
@@ -106,6 +110,19 @@ export const registerCommonPlugins = () => {
         getRestrictedParamNames,
         getAdditionalChartkitErrorContent,
         getCurrentUserRights,
+        getAccessEntryMenuItem: (): ContextMenuItem => {
+            const currentUserRights = getCurrentUserRights();
+
+            return {
+                id: ACCESS_MENU_ACTION,
+                action: ACCESS_MENU_ACTION,
+                icon: LockOpen,
+                text: 'value_access',
+                enable: () => true,
+                scopes: [EntryScope.Dash],
+                isVisible: ({entry}) => Boolean(entry?.workbookId) && currentUserRights.admin,
+            };
+        },
         getNotAuthenticatedErrorContentTypes: () => [],
         getHeaderWithoutHelpCenterErrorContentTypes: () => [],
         getHeaderWithoutNavigationErrorContentTypes: () => [],

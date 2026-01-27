@@ -4,6 +4,8 @@ import type {
     BreadcrumbsItem,
     EntryBreadcrumbsProps,
 } from 'ui/registry/units/common/types/components/EntryBreadcrumbs';
+import {UserRole} from 'shared/components/auth/constants/role';
+import {DL} from 'ui/constants/common';
 import Utils from 'ui/utils';
 
 const i18n = I18n.keyset('component.collection-breadcrumbs');
@@ -25,9 +27,10 @@ export const getEntityBreadcrumbsItems: GetEntityBreadcrumbsItems = ({
 }) => {
     if (!entry) return [];
 
+    const isAdmin = (DL.USER?.roles || []).includes(UserRole.Admin);
     const breadcrumbsItems: BreadcrumbsItem[] = [
         {
-            text: i18n('label_root-title'),
+            text: isAdmin ? i18n('label_root-title') : i18n('label_root-title-dashboards'),
             action: () => {
                 history.push('/collections');
             },

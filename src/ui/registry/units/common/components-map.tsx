@@ -1,6 +1,7 @@
 import {RangeInputPicker} from 'ui/components/common/RangeInputPicker';
 import type {ShareButtonProps} from 'ui/units/dash/components/ShareButton/ShareButton';
 
+import {AccessRights} from '../../../components/AccessRights/AccessRights';
 import {Datepicker} from '../../../components/common/Datepicker/Datepicker';
 import type {DatepickerControlProps} from '../../../components/common/DatepickerControl/DatepickerControl';
 import Timings from '../../../libs/DatalensChartkit/components/ChartKitBase/components/Header/components/Menu/Items/Inspector/Timings/Timings';
@@ -9,7 +10,6 @@ import {makeDefaultEmpty} from '../../components/DefaultEmpty';
 
 import {Example} from './components/Example/Example';
 import {EXAMPLE_COMPONENT} from './constants/components';
-import type {AccessRightsProps} from './types/components/AccessRights';
 import type {AccessRightsUrlOpenProps} from './types/components/AccessRightsUrlOpen';
 import type {AclSubjectProps} from './types/components/AclSubject';
 import type {AclSubjectSuggestProps} from './types/components/AclSubjectSuggest';
@@ -42,7 +42,7 @@ export const commonComponentsMap = {
     MobileHeaderComponent: makeDefaultEmpty<MobileHeaderComponentProps>(),
     PlaceholderIllustrationImage: makeDefaultEmpty<PlaceholderIllustrationImageProps>(),
     ReportButton: makeDefaultEmpty<ReportButtonProps>(),
-    AccessRights: makeDefaultEmpty<AccessRightsProps>(),
+    AccessRights,
     DialogAddParticipants: makeDefaultEmpty<DialogAddParticipantsProps>(),
     AccessRightsUrlOpenComponent: makeDefaultEmpty<AccessRightsUrlOpenProps>(),
     IamAccessDialogComponent: makeDefaultEmpty<IamAccessDialogProps>(),

@@ -4,7 +4,9 @@ import type {AppConfig} from '@gravity-ui/nodekit';
 import {
     AuthHeader,
     CSRF_TOKEN_HEADER,
+    DASH_INFO_HEADER,
     DL_COMPONENT_HEADER,
+    DL_CONTEXT_HEADER,
     DL_EMBED_TOKEN_HEADER,
     PROJECT_ID_HEADER,
     SuperuserHeader,
@@ -43,6 +45,8 @@ export default {
         AuthHeader.Authorization,
         CSRF_TOKEN_HEADER,
         DL_COMPONENT_HEADER,
+        DL_CONTEXT_HEADER,
+        DASH_INFO_HEADER,
         DL_EMBED_TOKEN_HEADER,
     ],
     headersMap: {},

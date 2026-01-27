@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import type {RouteComponentProps} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 import {CollectionItemEntities, EntryScope, Feature} from 'shared';
+import {UserRole} from 'shared/components/auth/constants/role';
 import {DL} from 'ui/constants/common';
 import {registry} from 'ui/registry';
 import {isEnabledFeature} from 'ui/utils/isEnabledFeature';
@@ -31,6 +32,7 @@ import {
 import {CollectionContent} from '../CollectionContent';
 import {DEFAULT_FILTERS} from '../constants';
 
+import {AvailableDashboardsContent} from '../AvailableDashboardsContent/AvailableDashboardsContent';
 import {useData, useFilters, useLayout, useSelection, useViewMode} from './hooks';
 import {useOpenCreateWorkbookDialog} from './hooks/useOpenCreateWorkbookDialog';
 
@@ -232,14 +234,21 @@ export const CollectionPage = (props: RouteComponentProps) => {
 
     const isRootCollection = curCollectionId === null;
 
-    const hasPermissionToCreate =
+    const isAdmin = (DL.USER?.roles || []).includes(UserRole.Admin);
+    const showDashboardsOnly = !isAdmin && isRootCollection;
+
+    const hasPermissionToCreateRaw =
         curCollectionId && collection
             ? Boolean(collection.permissions?.createWorkbook)
             : Boolean(rootCollectionPermissions?.createWorkbookInRoot);
 
-    const showCreateWorkbookButton = DL.IS_MOBILE
-        ? false
-        : hasPermissionToCreate || isRootCollection;
+    const hasPermissionToCreate = isAdmin ? hasPermissionToCreateRaw : false;
+
+    const showCreateWorkbookButton = isAdmin
+        ? DL.IS_MOBILE
+            ? false
+            : hasPermissionToCreate || isRootCollection
+        : false;
 
     const isFiltersHidden = DL.IS_MOBILE && isEnabledFeature(Feature.HideMultitenant);
 
@@ -284,51 +293,57 @@ export const CollectionPage = (props: RouteComponentProps) => {
 
     return (
         <div className={b({mobile: DL.IS_MOBILE})}>
-            <div className={b('filters', {hidden: isFiltersHidden})}>
-                <CollectionFilters
-                    filters={filters}
-                    controlSize="l"
-                    onChange={updateFilters}
-                    viewMode={viewMode}
-                    changeViewMode={changeViewMode}
-                />
-            </div>
+            {!showDashboardsOnly && (
+                <div className={b('filters', {hidden: isFiltersHidden})}>
+                    <CollectionFilters
+                        filters={filters}
+                        controlSize="l"
+                        onChange={updateFilters}
+                        viewMode={viewMode}
+                        changeViewMode={changeViewMode}
+                    />
+                </div>
+            )}
 
             <div className={b('content')}>
-                <CollectionContent
-                    curCollectionId={curCollectionId}
-                    filters={filters}
-                    viewMode={viewMode}
-                    selectedMap={selectedMap}
-                    selectedMapWithMovePermission={selectedMapWithMovePermission}
-                    selectedMapWithDeletePermission={selectedMapWithDeletePermission}
-                    itemsAvailableForSelection={itemsAvailableForSelection}
-                    isOpenSelectionMode={isOpenSelectionMode}
-                    canCreateWorkbook={hasPermissionToCreate}
-                    showCreateWorkbookButton={showCreateWorkbookButton}
-                    getStructureItemsRecursively={getStructureItemsRecursively}
-                    fetchStructureItems={fetchStructureItems}
-                    onCloseMoveDialog={handeCloseMoveDialog}
-                    onCreateWorkbookWithConnectionClick={
-                        hasPermissionToCreate
-                            ? handleOpenCreateDialogWithConnection
-                            : handleShowNoPermissionsDialog
-                    }
-                    onClearFiltersClick={() => {
-                        updateFilters({
-                            ...DEFAULT_FILTERS,
-                            orderField: filters.orderField,
-                            orderDirection: filters.orderDirection,
-                        });
-                    }}
-                    onMoveSelectedEntitiesClick={handleMoveSelectedEntities}
-                    onDeleteSelectedEntitiesClick={handleDeleteSelectedEntities}
-                    resetSelected={resetSelected}
-                    onUpdateCheckboxClick={updateCheckbox}
-                    onUpdateAllCheckboxesClick={updateAllCheckboxes}
-                    isEmptyItems={items.length === 0}
-                    refreshPage={refreshPage}
-                />
+                {showDashboardsOnly ? (
+                    <AvailableDashboardsContent />
+                ) : (
+                    <CollectionContent
+                        curCollectionId={curCollectionId}
+                        filters={filters}
+                        viewMode={viewMode}
+                        selectedMap={selectedMap}
+                        selectedMapWithMovePermission={selectedMapWithMovePermission}
+                        selectedMapWithDeletePermission={selectedMapWithDeletePermission}
+                        itemsAvailableForSelection={itemsAvailableForSelection}
+                        isOpenSelectionMode={isOpenSelectionMode}
+                        canCreateWorkbook={hasPermissionToCreate}
+                        showCreateWorkbookButton={showCreateWorkbookButton}
+                        getStructureItemsRecursively={getStructureItemsRecursively}
+                        fetchStructureItems={fetchStructureItems}
+                        onCloseMoveDialog={handeCloseMoveDialog}
+                        onCreateWorkbookWithConnectionClick={
+                            hasPermissionToCreate
+                                ? handleOpenCreateDialogWithConnection
+                                : handleShowNoPermissionsDialog
+                        }
+                        onClearFiltersClick={() => {
+                            updateFilters({
+                                ...DEFAULT_FILTERS,
+                                orderField: filters.orderField,
+                                orderDirection: filters.orderDirection,
+                            });
+                        }}
+                        onMoveSelectedEntitiesClick={handleMoveSelectedEntities}
+                        onDeleteSelectedEntitiesClick={handleDeleteSelectedEntities}
+                        resetSelected={resetSelected}
+                        onUpdateCheckboxClick={updateCheckbox}
+                        onUpdateAllCheckboxesClick={updateAllCheckboxes}
+                        isEmptyItems={items.length === 0}
+                        refreshPage={refreshPage}
+                    />
+                )}
             </div>
         </div>
     );
