@@ -7,6 +7,8 @@ export type ChartkitGlobalSettings = {
         enabled?: boolean;
         /** Use as an external dependency (the files are loaded from CDN) */
         external?: boolean;
+        /** Base path for local scripts (e.g. "/scripts"). If set, it overrides protocol/domain/version. */
+        publicPath?: string;
         domain?: string;
         protocol?: string;
         /** List of highcharts modules to be downloaded from CDN. The setting is used only for the enabled "external" flag  */

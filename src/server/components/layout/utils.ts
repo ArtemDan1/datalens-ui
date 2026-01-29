@@ -35,6 +35,7 @@ export function getChartkitLayoutSettings(
             domain = 'code.highcharts.com',
             version,
             modules = [],
+            publicPath,
         } = chartkitSettings.highcharts;
         const items = [
             'highcharts',
@@ -42,9 +43,13 @@ export function getChartkitLayoutSettings(
             ...modules.map((item) => `modules/${item}`),
         ];
 
+        const base = publicPath
+            ? publicPath.replace(/\/$/, '')
+            : `${protocol}://${domain}${version ? `/${version}` : ''}`;
+
         chartkitScripts.push(
             ...items.map((item) => ({
-                src: `${protocol}://${domain}${version ? `/${version}` : ''}/${item}.js`,
+                src: `${base}/${item}.js`,
                 defer: true,
             })),
         );

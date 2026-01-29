@@ -176,6 +176,7 @@ export default {
         highcharts: {
             enabled: isTrueArg(process.env.HC),
             external: true,
+            publicPath: process.env.HC_PUBLIC_PATH || '/scripts',
             domain: process.env.HC_ENDPOINT || 'code.highcharts.com',
             protocol: process.env.HC_PROTOCOL || 'https',
             modules: process.env.HC_MODULES
